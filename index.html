@@ -1,0 +1,757 @@
+# AKSUM CHRONICLE — Google Drive Archive Directory
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AKSUM CHRONICLE</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+    --crimson:#5a1f1f;
+    --burgundy:#6b2323;
+    --gold:#c89b3c;
+    --ivory:#f4f1ea;
+    --black:#1b1b1b;
+    --bronze:#8a6a3a;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:'Cormorant Garamond', serif;
+    background:
+    linear-gradient(rgba(0,0,0,.78), rgba(0,0,0,.85)),
+    url('https://images.unsplash.com/photo-1518562180175-34a163b1a9a6?q=80&w=1600&auto=format&fit=crop');
+    background-size:cover;
+    background-attachment:fixed;
+    color:var(--ivory);
+    overflow-x:hidden;
+}
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:url('https://www.transparenttextures.com/patterns/old-map.png');
+    opacity:.12;
+    pointer-events:none;
+    z-index:999;
+}
+
+nav{
+    position:fixed;
+    top:0;
+    width:100%;
+    z-index:1000;
+    background:rgba(15,10,10,.8);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(200,155,60,.25);
+}
+
+.nav-inner{
+    max-width:1400px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:24px 40px;
+}
+
+.logo{
+    font-family:'Cinzel', serif;
+    color:var(--gold);
+    letter-spacing:4px;
+    font-size:1.4rem;
+}
+
+.nav-links{
+    display:flex;
+    gap:32px;
+}
+
+.nav-links a{
+    text-decoration:none;
+    color:var(--ivory);
+    text-transform:uppercase;
+    letter-spacing:2px;
+    font-size:.8rem;
+    transition:.4s;
+}
+
+.nav-links a:hover{
+    color:var(--gold);
+}
+
+.hero{
+    min-height:90vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:140px 30px 80px;
+    position:relative;
+}
+
+.hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+    radial-gradient(circle at top,
+    rgba(255,215,120,.15),
+    transparent 35%);
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    max-width:1100px;
+}
+
+.gold-divider{
+    width:240px;
+    height:2px;
+    margin:30px auto;
+    background:
+    linear-gradient(to right,
+    transparent,
+    var(--gold),
+    transparent);
+    position:relative;
+}
+
+.gold-divider::after{
+    content:"✦";
+    position:absolute;
+    left:50%;
+    top:-13px;
+    transform:translateX(-50%);
+    color:var(--gold);
+}
+
+.hero h1{
+    font-family:'Cinzel', serif;
+    font-size:6rem;
+    letter-spacing:10px;
+    margin-bottom:25px;
+    text-shadow:
+    0 0 25px rgba(200,155,60,.2),
+    0 0 80px rgba(0,0,0,.8);
+}
+
+.hero h2{
+    color:var(--gold);
+    letter-spacing:7px;
+    text-transform:uppercase;
+    margin-bottom:35px;
+    font-size:1rem;
+}
+
+.hero p{
+    max-width:850px;
+    margin:auto;
+    line-height:1.9;
+    font-size:1.35rem;
+    color:#e7ddd0;
+}
+
+.archive-search{
+    margin-top:55px;
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    flex-wrap:wrap;
+}
+
+.archive-search input{
+    width:600px;
+    max-width:90%;
+    padding:18px 24px;
+    background:rgba(15,10,10,.82);
+    border:1px solid rgba(200,155,60,.45);
+    color:var(--ivory);
+    font-size:1rem;
+    font-family:'Cormorant Garamond', serif;
+}
+
+.archive-search input:focus{
+    outline:none;
+    border-color:var(--gold);
+    box-shadow:0 0 25px rgba(200,155,60,.25);
+}
+
+.archive-search button{
+    padding:18px 34px;
+    background:linear-gradient(to right,var(--crimson),var(--burgundy));
+    border:1px solid var(--gold);
+    color:var(--ivory);
+    text-transform:uppercase;
+    letter-spacing:2px;
+    cursor:pointer;
+    transition:.4s;
+}
+
+.archive-search button:hover{
+    background:var(--gold);
+    color:var(--black);
+}
+
+.section{
+    padding:80px 8% 120px;
+}
+
+.section-title{
+    text-align:center;
+    margin-bottom:70px;
+}
+
+.section-title h3{
+    font-family:'Cinzel', serif;
+    font-size:3rem;
+    color:var(--gold);
+    margin-bottom:18px;
+}
+
+.section-title p{
+    text-transform:uppercase;
+    letter-spacing:3px;
+    color:#d2c7b6;
+}
+
+.results{
+    max-width:1400px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:35px;
+}
+
+.result-card{
+    background:
+    linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.55)),
+    linear-gradient(135deg,#5a1f1f,#2a0d0d);
+    border:1px solid rgba(200,155,60,.3);
+    padding:40px;
+    position:relative;
+    transition:.5s;
+    overflow:hidden;
+}
+
+.result-card::before{
+    content:"✦";
+    position:absolute;
+    top:18px;
+    right:20px;
+    color:rgba(200,155,60,.35);
+    font-size:1.5rem;
+}
+
+.result-card:hover{
+    transform:translateY(-5px);
+    border-color:var(--gold);
+    box-shadow:
+    0 0 35px rgba(200,155,60,.15),
+    0 20px 60px rgba(0,0,0,.55);
+}
+
+.result-card span{
+    color:var(--gold);
+    text-transform:uppercase;
+    letter-spacing:2px;
+    font-size:.75rem;
+}
+
+.result-card h3{
+    margin-top:16px;
+    margin-bottom:18px;
+    font-family:'Cinzel', serif;
+    color:var(--gold);
+    font-size:1.6rem;
+}
+
+.result-card p{
+    line-height:1.8;
+    color:#e7ddd0;
+    margin-bottom:28px;
+}
+
+.card-buttons{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+}
+
+.card-buttons a{
+    text-decoration:none;
+    color:var(--gold);
+    border:1px solid rgba(200,155,60,.4);
+    padding:12px 18px;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    font-size:.75rem;
+    transition:.4s;
+}
+
+.card-buttons a:hover{
+    background:var(--gold);
+    color:var(--black);
+}
+
+.meta-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+    margin-bottom:25px;
+}
+
+.meta-item{
+    background:rgba(255,255,255,.03);
+    padding:12px;
+    border:1px solid rgba(200,155,60,.12);
+}
+
+.meta-label{
+    color:var(--gold);
+    text-transform:uppercase;
+    font-size:.7rem;
+    letter-spacing:2px;
+}
+
+.meta-value{
+    margin-top:5px;
+    color:#e8dece;
+}
+
+footer{
+    background:#180909;
+    padding:90px 8%;
+    border-top:1px solid rgba(200,155,60,.2);
+}
+
+.footer-divider{
+    width:100%;
+    height:1px;
+    background:linear-gradient(to right,transparent,var(--gold),transparent);
+    margin-bottom:60px;
+}
+
+.footer-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:40px;
+}
+
+.footer-column h5{
+    color:var(--gold);
+    margin-bottom:22px;
+    font-family:'Cinzel', serif;
+    letter-spacing:2px;
+}
+
+.footer-column a{
+    display:block;
+    margin-bottom:12px;
+    color:#d6cab8;
+    text-decoration:none;
+}
+
+.footer-column a:hover{
+    color:var(--gold);
+}
+
+.footer-bottom{
+    text-align:center;
+    margin-top:70px;
+    color:#9f8659;
+    letter-spacing:2px;
+    font-size:.8rem;
+}
+
+@media(max-width:900px){
+
+.hero h1{
+    font-size:3.5rem;
+}
+
+.hero p{
+    font-size:1.1rem;
+}
+
+.nav-links{
+    display:none;
+}
+
+.meta-grid{
+    grid-template-columns:1fr;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<nav>
+
+<div class="nav-inner">
+
+<div class="logo">
+AKSUM CHRONICLE
+</div>
+
+<div class="nav-links">
+<a href="#">Collections</a>
+<a href="#">Manuscripts</a>
+<a href="#">Archives</a>
+<a href="#">Research</a>
+<a href="#">Library</a>
+</div>
+
+</div>
+
+</nav>
+
+<section class="hero">
+
+<div class="hero-content">
+
+<div class="gold-divider"></div>
+
+<h1>AKSUM CHRONICLE</h1>
+
+<h2>
+Institute of Historical Studies
+</h2>
+
+<p>
+A searchable imperial archive and manuscript directory containing digitized collections, historical records, cartographic materials, rare books, and scholarly repositories.
+</p>
+
+<div class="archive-search">
+
+<input
+id="searchInput"
+type="text"
+placeholder="Search manuscripts, folders, archives, dynasties, scholars..." />
+
+<button onclick="searchArchives()">
+Search Archives
+</button>
+
+</div>
+
+<div class="gold-divider"></div>
+
+</div>
+
+</section>
+
+<section class="section">
+
+<div class="section-title">
+<h3>Imperial Archive Directory</h3>
+<p>Digitized Manuscript Collections & Historical Repositories</p>
+</div>
+
+<div class="results" id="results"></div>
+
+</section>
+
+<footer>
+
+<div class="footer-divider"></div>
+
+<div class="footer-grid">
+
+<div class="footer-column">
+<h5>Collections</h5>
+<a href="#">Royal Manuscripts</a>
+<a href="#">Imperial Archives</a>
+<a href="#">Digital Codices</a>
+</div>
+
+<div class="footer-column">
+<h5>Institution</h5>
+<a href="#">Research Fellows</a>
+<a href="#">Historical Council</a>
+<a href="#">Academic Journals</a>
+</div>
+
+<div class="footer-column">
+<h5>Resources</h5>
+<a href="#">Archive Access</a>
+<a href="#">Library Index</a>
+<a href="#">Digital Repository</a>
+</div>
+
+</div>
+
+<div class="footer-bottom">
+© 2026 AKSUM CHRONICLE — Institute of Historical Studies
+</div>
+
+</footer>
+
+<script>
+
+/* =====================================================
+ADD YOUR GOOGLE DRIVE CONTENTS HERE
+===================================================== */
+
+const archives = [
+
+{
+    title:"Royal Aksumite Correspondence",
+    description:"Imperial diplomatic manuscripts documenting trade, royal decrees, and ecclesiastical correspondence.",
+    category:"Manuscripts",
+    dynasty:"Kingdom of Aksum",
+    date:"4th Century",
+    type:"PDF Collection",
+    drive:"https://drive.google.com/",
+    preview:"https://drive.google.com/"
+},
+
+{
+    title:"Byzantine–Makurian Diplomatic Archives",
+    description:"Historical archives detailing political and religious interactions between Makuria and Byzantium.",
+    category:"Diplomatic Records",
+    dynasty:"Makuria",
+    date:"9th Century",
+    type:"Archive Folder",
+    drive:"https://drive.google.com/",
+    preview:"https://drive.google.com/"
+},
+
+{
+    title:"Ethiopian Imperial Cartography",
+    description:"Digitized trade routes, maritime atlases, and reconstructed Horn of Africa geopolitical maps.",
+    category:"Cartography",
+    dynasty:"Solomonic Dynasty",
+    date:"12th Century",
+    type:"Map Archive",
+    drive:"https://drive.google.com/",
+    preview:"https://drive.google.com/"
+},
+
+{
+    title:"Solomonic Dynasty Manuscripts",
+    description:"Illuminated codices, theological manuscripts, and imperial court records.",
+    category:"Religious Manuscripts",
+    dynasty:"Solomonic Dynasty",
+    date:"14th Century",
+    type:"Digital Codices",
+    drive:"https://drive.google.com/",
+    preview:"https://drive.google.com/"
+}
+
+];
+
+/* =====================================================
+DISPLAY RESULTS
+===================================================== */
+
+function displayResults(results){
+
+const container =
+document.getElementById("results");
+
+container.innerHTML = "";
+
+if(results.length === 0){
+
+container.innerHTML =
+"<p style='text-align:center; width:100%; font-size:1.2rem;'>No archival materials found.</p>";
+
+return;
+
+}
+
+results.forEach(item => {
+
+container.innerHTML += `
+
+<div class="result-card">
+
+<span>${item.date}</span>
+
+<h3>${item.title}</h3>
+
+<div class="meta-grid">
+
+<div class="meta-item">
+<div class="meta-label">Category</div>
+<div class="meta-value">${item.category}</div>
+</div>
+
+<div class="meta-item">
+<div class="meta-label">Dynasty</div>
+<div class="meta-value">${item.dynasty}</div>
+</div>
+
+<div class="meta-item">
+<div class="meta-label">Type</div>
+<div class="meta-value">${item.type}</div>
+</div>
+
+<div class="meta-item">
+<div class="meta-label">Archive</div>
+<div class="meta-value">Digitized Repository</div>
+</div>
+
+</div>
+
+<p>${item.description}</p>
+
+<div class="card-buttons">
+
+<a href="${item.drive}" target="_blank">
+Open Archive
+</a>
+
+<a href="${item.preview}" target="_blank">
+Preview Collection
+</a>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+/* =====================================================
+SEARCH FUNCTION
+===================================================== */
+
+function searchArchives(){
+
+const query =
+document
+.getElementById("searchInput")
+.value
+.toLowerCase();
+
+const results =
+archives.filter(item =>
+
+item.title.toLowerCase().includes(query) ||
+item.description.toLowerCase().includes(query) ||
+item.category.toLowerCase().includes(query) ||
+item.dynasty.toLowerCase().includes(query) ||
+item.date.toLowerCase().includes(query)
+
+);
+
+displayResults(results);
+
+}
+
+/* =====================================================
+LIVE SEARCH
+===================================================== */
+
+document
+.getElementById("searchInput")
+.addEventListener("keyup", searchArchives);
+
+/* =====================================================
+LOAD DEFAULT ARCHIVES
+===================================================== */
+
+window.onload = () => {
+
+displayResults(archives);
+
+};
+
+</script>
+
+</body>
+</html>
+```
+
+---
+
+# HOW TO CONNECT YOUR GOOGLE DRIVE CONTENT
+
+Replace the sample archive entries inside:
+
+```javascript
+const archives = [ ]
+```
+
+with your real Google Drive folders/files.
+
+Example:
+
+```javascript
+{
+    title:"Ancient Ethiopian Manuscripts",
+    description:"Digitized manuscript collection from the imperial archive.",
+    category:"Manuscripts",
+    dynasty:"Aksumite",
+    date:"5th Century",
+    type:"Google Drive Folder",
+    drive:"YOUR_GOOGLE_DRIVE_LINK",
+    preview:"YOUR_GOOGLE_DRIVE_LINK"
+}
+```
+
+---
+
+# GITHUB PAGES SETUP
+
+1. Create a GitHub repository
+2. Upload this file as:
+
+```txt
+index.html
+```
+
+3. Go to:
+
+```txt
+Settings → Pages
+```
+
+4. Select:
+
+```txt
+Deploy from branch → main
+```
+
+5. Save
+
+GitHub will generate your live site automatically.
+
+---
+
+# OPTIONAL UPGRADE
+
+To fully mirror a Smithsonian-style archive system later, add:
+
+* Pagefind search indexing
+* JSON archive database
+* Folder previews
+* PDF manuscript viewers
+* Collection pages
+* IIIF manuscript viewer
+* Metadata filtering
+* Advanced archive taxonomy
