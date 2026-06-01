@@ -1,6 +1,3 @@
-# AKSUM CHRONICLE — Google Drive Archive Directory
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -506,59 +503,14 @@ Search Archives
 
 </footer>
 
+<script src="archives.js"></script>
 <script>
 
 /* =====================================================
-ADD YOUR GOOGLE DRIVE CONTENTS HERE
+LOAD EXTERNAL ARCHIVE DATA
 ===================================================== */
 
-const archives = [
-
-{
-    title:"Royal Aksumite Correspondence",
-    description:"Imperial diplomatic manuscripts documenting trade, royal decrees, and ecclesiastical correspondence.",
-    category:"Manuscripts",
-    dynasty:"Kingdom of Aksum",
-    date:"4th Century",
-    type:"PDF Collection",
-    drive:"https://drive.google.com/file/d/1MIn7QrfgbhJny6NHeswsdw950eZLLYeW/view?usp=sharing",
-    preview:"https://drive.google.com/file/d/1MIn7QrfgbhJny6NHeswsdw950eZLLYeW/view?usp=sharing"
-},
-
-{
-    title:"Byzantine–Makurian Diplomatic Archives",
-    description:"Historical archives detailing political and religious interactions between Makuria and Byzantium.",
-    category:"Diplomatic Records",
-    dynasty:"Makuria",
-    date:"9th Century",
-    type:"Archive Folder",
-    drive:"https://drive.google.com/file/d/1f9ctbQDlwVpjFhLl6if-6DN18mpTF8pJ/view?usp=sharing",
-    preview:"https://drive.google.com/file/d/1f9ctbQDlwVpjFhLl6if-6DN18mpTF8pJ/view?usp=sharing"
-},
-
-{
-    title:"Ethiopian Imperial Cartography",
-    description:"Digitized trade routes, maritime atlases, and reconstructed Horn of Africa geopolitical maps.",
-    category:"Cartography",
-    dynasty:"Solomonic Dynasty",
-    date:"12th Century",
-    type:"Map Archive",
-    drive:"https://drive.google.com/file/d/1IF54f2EXBPF4Yw7HqQEKaFmPVlkqrezL/view?usp=sharing",
-    preview:"https://drive.google.com/file/d/1IF54f2EXBPF4Yw7HqQEKaFmPVlkqrezL/view?usp=sharing"
-},
-
-{
-    title:"Solomonic Dynasty Manuscripts",
-    description:"Illuminated codices, theological manuscripts, and imperial court records.",
-    category:"Religious Manuscripts",
-    dynasty:"Solomonic Dynasty",
-    date:"14th Century",
-    type:"Digital Codices",
-    drive:"https://drive.google.com/file/d/1kMNS6pxTZDAv3QQjxr-7FynhiHQiXe0n/view?usp=sharing",
-    preview:"https://drive.google.com/file/d/1kMNS6pxTZDAv3QQjxr-7FynhiHQiXe0n/view?usp=sharing"
-}
-
-];
+const archives = typeof ARCHIVES_DATA !== 'undefined' ? ARCHIVES_DATA : [];
 
 /* =====================================================
 DISPLAY RESULTS
@@ -648,16 +600,10 @@ document
 .value
 .toLowerCase();
 
-const results =
-archives.filter(item =>
-
-item.title.toLowerCase().includes(query) ||
-item.description.toLowerCase().includes(query) ||
-item.category.toLowerCase().includes(query) ||
-item.dynasty.toLowerCase().includes(query) ||
-item.date.toLowerCase().includes(query)
-
-);
+const results = archives.filter(item => {
+  const fields = [item.title, item.description, item.category, item.dynasty, item.date];
+  return fields.some(field => field && String(field).toLowerCase().includes(query));
+});
 
 displayResults(results);
 
@@ -682,11 +628,5 @@ displayResults(archives);
 };
 
 </script>
-
 </body>
 </html>
-```
-
-
-
-
