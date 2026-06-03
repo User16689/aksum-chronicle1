@@ -19,7 +19,7 @@
  *   type: "PDF Collection", // Options: PDF Collection, Archive Folder, Map Archive, Digital Codices, etc.
  *   drive: "https://drive.google.com/...", // Link to Google Drive folder/file
  *   preview: "https://drive.google.com/...", // Link to preview
- *   subscriberOnly: false // Set to true if only visible to subscribers
+ *   premium: false // Set to true if only visible to premium subscribers
  * },
  * -------------------------------------------------------------------
  */
@@ -33,7 +33,8 @@ const ARCHIVES_DATA = [
     date: "4th Century",
     type: "PDF Collection",
     drive: "https://drive.google.com/file/d/1MIn7QrfgbhJny6NHeswsdw950eZLLYeW/view?usp=sharing",
-    preview: "https://drive.google.com/file/d/1MIn7QrfgbhJny6NHeswsdw950eZLLYeW/view?usp=sharing"
+    preview: "https://drive.google.com/file/d/1MIn7QrfgbhJny6NHeswsdw950eZLLYeW/view?usp=sharing",
+    premium: false
   },
   {
     title: "Byzantine–Makurian Diplomatic Archives",
@@ -43,7 +44,8 @@ const ARCHIVES_DATA = [
     date: "9th Century",
     type: "Archive Folder",
     drive: "https://drive.google.com/file/d/1f9ctbQDlwVpjFhLl6if-6DN18mpTF8pJ/view?usp=sharing",
-    preview: "https://drive.google.com/file/d/1f9ctbQDlwVpjFhLl6if-6DN18mpTF8pJ/view?usp=sharing"
+    preview: "https://drive.google.com/file/d/1f9ctbQDlwVpjFhLl6if-6DN18mpTF8pJ/view?usp=sharing",
+    premium: false
   },
   {
     title: "Ethiopian Imperial Cartography",
@@ -53,7 +55,8 @@ const ARCHIVES_DATA = [
     date: "12th Century",
     type: "Map Archive",
     drive: "https://drive.google.com/file/d/1IF54f2EXBPF4Yw7HqQEKaFmPVlkqrezL/view?usp=sharing",
-    preview: "https://drive.google.com/file/d/1IF54f2EXBPF4Yw7HqQEKaFmPVlkqrezL/view?usp=sharing"
+    preview: "https://drive.google.com/file/d/1IF54f2EXBPF4Yw7HqQEKaFmPVlkqrezL/view?usp=sharing",
+    premium: true
   },
   {
     title: "Solomonic Dynasty Manuscripts",
@@ -63,6 +66,7 @@ const ARCHIVES_DATA = [
     date: "14th Century",
     type: "Digital Codices",
     drive: "https://drive.google.com/file/d/1kMNS6pxTZDAv3QQjxr-7FynhiHQiXe0n/view?usp=sharing",
-    preview: "https://drive.google.com/file/d/1kMNS6pxTZDAv3QQjxr-7FynhiHQiXe0n/view?usp=sharing"
+    preview: "https://drive.google.com/file/d/1kMNS6pxTZDAv3QQjxr-7FynhiHQiXe0n/view?usp=sharing",
+    premium: true
   }
 ];
