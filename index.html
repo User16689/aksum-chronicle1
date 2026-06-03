@@ -301,6 +301,7 @@ nav{
     letter-spacing:2px;
     font-size:.75rem;
     transition:.4s;
+    cursor:pointer;
 }
 
 .card-buttons a:hover{
@@ -570,7 +571,7 @@ container.innerHTML += `
 
 <div class="card-buttons">
 
-<a href="${item.drive}" target="_blank">
+<a onclick="openPdfViewer('${encodeURIComponent(item.drive)}', '${encodeURIComponent(item.title)}', '${encodeURIComponent(item.description)}')">
 Open Archive
 </a>
 
@@ -586,6 +587,15 @@ Preview Collection
 
 });
 
+}
+
+/* =====================================================
+OPEN PDF VIEWER FUNCTION
+===================================================== */
+
+function openPdfViewer(pdfUrl, title, description) {
+  const viewerUrl = `pdf-viewer.html?pdf=${pdfUrl}&title=${title}&desc=${description}`;
+  window.location.href = viewerUrl;
 }
 
 /* =====================================================
