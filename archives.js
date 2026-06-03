@@ -19,8 +19,12 @@
  *   type: "PDF Collection", // Options: PDF Collection, Archive Folder, Map Archive, Digital Codices, etc.
  *   drive: "https://drive.google.com/...", // Link to Google Drive folder/file
  *   preview: "https://drive.google.com/...", // Link to preview
- *   freePages: 0, // Number of free pages (0 = premium only, >0 = free pages before paywall)
+ *   freePages: 5, // Number of free pages (0 = premium only, 5 = default, change if needed)
  * },
+ * 
+ * IMPORTANT: freePages defaults to 5 if not specified. 
+ * Set to 0 if the archive should be premium-only.
+ * 
  * -------------------------------------------------------------------
  */
 
