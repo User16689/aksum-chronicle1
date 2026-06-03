@@ -19,7 +19,7 @@
  *   type: "PDF Collection", // Options: PDF Collection, Archive Folder, Map Archive, Digital Codices, etc.
  *   drive: "https://drive.google.com/...", // Link to Google Drive folder/file
  *   preview: "https://drive.google.com/...", // Link to preview
- *   premium: false // Set to true if only visible to premium subscribers
+ *   freePages: 0, // Number of free pages (0 = premium only, >0 = free pages before paywall)
  * },
  * -------------------------------------------------------------------
  */
@@ -34,7 +34,7 @@ const ARCHIVES_DATA = [
     type: "PDF Collection",
     drive: "https://drive.google.com/file/d/1MIn7QrfgbhJny6NHeswsdw950eZLLYeW/view?usp=sharing",
     preview: "https://drive.google.com/file/d/1MIn7QrfgbhJny6NHeswsdw950eZLLYeW/view?usp=sharing",
-    premium: false
+    freePages: 0
   },
   {
     title: "Byzantine–Makurian Diplomatic Archives",
@@ -45,7 +45,7 @@ const ARCHIVES_DATA = [
     type: "Archive Folder",
     drive: "https://drive.google.com/file/d/1f9ctbQDlwVpjFhLl6if-6DN18mpTF8pJ/view?usp=sharing",
     preview: "https://drive.google.com/file/d/1f9ctbQDlwVpjFhLl6if-6DN18mpTF8pJ/view?usp=sharing",
-    premium: false
+    freePages: 5
   },
   {
     title: "Ethiopian Imperial Cartography",
@@ -56,7 +56,7 @@ const ARCHIVES_DATA = [
     type: "Map Archive",
     drive: "https://drive.google.com/file/d/1IF54f2EXBPF4Yw7HqQEKaFmPVlkqrezL/view?usp=sharing",
     preview: "https://drive.google.com/file/d/1IF54f2EXBPF4Yw7HqQEKaFmPVlkqrezL/view?usp=sharing",
-    premium: true
+    freePages: 5
   },
   {
     title: "Solomonic Dynasty Manuscripts",
@@ -67,6 +67,6 @@ const ARCHIVES_DATA = [
     type: "Digital Codices",
     drive: "https://drive.google.com/file/d/1kMNS6pxTZDAv3QQjxr-7FynhiHQiXe0n/view?usp=sharing",
     preview: "https://drive.google.com/file/d/1kMNS6pxTZDAv3QQjxr-7FynhiHQiXe0n/view?usp=sharing",
-    premium: true
+    freePages: 5
   }
 ];
