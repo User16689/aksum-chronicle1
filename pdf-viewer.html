@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF Viewer - AKSUM CHRONICLE</title>
+  
+  <!-- PDF.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  
+  <style>
+    :root {
+      --crimson: #5a1f1f;
+      --burgundy: #6b2323;
+      --gold: #c89b3c;
+      --ivory: #f4f1ea;
+      --black: #1b1b1b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Cormorant Garamond', serif;
+      background: linear-gradient(rgba(0,0,0,.9), rgba(0,0,0,.95)), url('https://images.unsplash.com/photo-1518562180175-34a163b1a9a6?q=80&w=1600&auto=format&fit=crop');
+      background-size: cover;
+      background-attachment: fixed;
+      color: var(--ivory);
+      overflow-x: hidden;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(15, 10, 10, .8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(200, 155, 60, .25);
+      padding: 20px 40px;
+    }
+
+    .nav-inner {
+      max-width: 1400px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      color: var(--gold);
+      letter-spacing: 4px;
+      font-size: 1.4rem;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .logo:hover {
+      color: var(--ivory);
+    }
+
+    .viewer-container {
+      max-width: 900px;
+      margin: 100px auto 40px;
+      padding: 0 20px;
+    }
+
+    .pdf-header {
+      background: linear-gradient(135deg, #5a1f1f, #2a0d0d);
+      border: 1px solid rgba(200, 155, 60, .3);
+      padding: 25px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+
+    .pdf-header h2 {
+      color: var(--gold);
+      margin-bottom: 8px;
+      font-size: 1.8rem;
+    }
+
+    .pdf-header p {
+      color: #d2c7b6;
+      font-size: 0.9rem;
+    }
+
+    .pdf-viewer {
+      background: #000;
+      border: 1px solid rgba(200, 155, 60, .3);
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    #pdfCanvas {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .viewer-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      padding: 20px;
+      background: rgba(15, 10, 10, .8);
+      border-top: 1px solid rgba(200, 155, 60, .3);
+      flex-wrap: wrap;
+    }
+
+    .viewer-controls button {
+      padding: 10px 18px;
+      background: linear-gradient(to right, var(--crimson), var(--burgundy));
+      border: 1px solid var(--gold);
+      color: var(--ivory);
+      cursor: pointer;
+      transition: .3s;
+      border-radius: 4px;
+    }
+
+    .viewer-controls button:hover {
+      background: var(--gold);
+      color: var(--black);
+    }
+
+    .viewer-controls button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .page-info {
+      color: var(--gold);
+      font-size: 0.9rem;
+      min-width: 120px;
+      text-align: center;
+    }
+
+    .page-input {
+      width: 50px;
+      padding: 8px;
+      background: rgba(15, 10, 10, .8);
+      border: 1px solid rgba(200, 155, 60, .45);
+      color: var(--ivory);
+      text-align: center;
+      border-radius: 4px;
+    }
+
+    .page-input:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    /* PAYWALL MODAL */
+    .paywall-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .9);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      backdrop-filter: blur(5px);
+    }
+
+    .paywall-overlay.active {
+      display: flex;
+    }
+
+    .paywall-modal {
+      background: linear-gradient(135deg, #5a1f1f, #2a0d0d);
+      border: 2px solid var(--gold);
+      padding: 50px 40px;
+      border-radius: 12px;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: 0 0 50px rgba(200, 155, 60, .2);
+    }
+
+    .paywall-modal h2 {
+      color: var(--gold);
+      font-size: 2rem;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+
+    .paywall-modal p {
+      color: #d2c7b6;
+      line-height: 1.8;
+      margin-bottom: 20px;
+      font-size: 1rem;
+    }
+
+    .paywall-price {
+      color: var(--gold);
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin: 30px 0;
+    }
+
+    .paywall-benefits {
+      text-align: left;
+      background: rgba(255, 255, 255, .05);
+      padding: 20px;
+      border-left: 3px solid var(--gold);
+      margin: 30px 0;
+      border-radius: 4px;
+    }
+
+    .paywall-benefits li {
+      list-style: none;
+      color: #e7ddd0;
+      padding: 8px 0;
+      font-size: 0.95rem;
+    }
+
+    .paywall-benefits li:before {
+      content: "✓ ";
+      color: var(--gold);
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .paywall-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .paywall-buttons button {
+      padding: 14px 28px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: bold;
+      transition: .3s;
+      font-size: 0.9rem;
+    }
+
+    .btn-subscribe {
+      background: var(--gold);
+      color: var(--black);
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .btn-subscribe:hover {
+      background: #d4a85a;
+      transform: scale(1.05);
+    }
+
+    .btn-close {
+      background: rgba(255, 255, 255, .1);
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .btn-close:hover {
+      background: rgba(200, 155, 60, .2);
+    }
+
+    .free-pages-notice {
+      background: rgba(200, 155, 60, .15);
+      border: 1px solid rgba(200, 155, 60, .4);
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      text-align: center;
+      color: var(--gold);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 600px) {
+      .viewer-controls {
+        flex-direction: column;
+      }
+
+      .paywall-modal {
+        padding: 30px 20px;
+      }
+
+      .paywall-modal h2 {
+        font-size: 1.5rem;
+      }
+
+      .paywall-price {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">AKSUM CHRONICLE</a>
+  </div>
+</nav>
+
+<div class="viewer-container">
+  <div class="pdf-header">
+    <h2 id="pdfTitle">Loading...</h2>
+    <p id="pdfDescription"></p>
+  </div>
+
+  <div class="free-pages-notice" id="freeNotice">
+    📖 Free preview: Pages 1-15. Subscribe to access the complete archive.
+  </div>
+
+  <div class="pdf-viewer">
+    <canvas id="pdfCanvas"></canvas>
+  </div>
+
+  <div class="viewer-controls">
+    <button id="prevPage" onclick="previousPage()">← Previous</button>
+    <div class="page-info">
+      Page <input type="number" id="pageNum" value="1" min="1" onchange="goToPage()" class="page-input"> of <span id="totalPages">0</span>
+    </div>
+    <button id="nextPage" onclick="nextPage()">Next →</button>
+  </div>
+</div>
+
+<!-- PAYWALL MODAL -->
+<div class="paywall-overlay" id="paywallOverlay">
+  <div class="paywall-modal">
+    <h2>🔒 Premium Access Required</h2>
+    <p>You've reached the end of the free preview. To access the complete archive and all premium materials, subscribe today.</p>
+    
+    <div class="paywall-price">$25 <span style="font-size: 0.6em;">/MONTH</span></div>
+
+    <ul class="paywall-benefits">
+      <li>Access to all archived PDFs</li>
+      <li>Complete manuscript collections</li>
+      <li>Rare historical maps & media</li>
+      <li>New content added monthly</li>
+      <li>Support archive preservation</li>
+    </ul>
+
+    <p style="font-size: 0.85rem; color: #a89056;">Your subscription helps fund the preservation and digitization of our historical archives.</p>
+
+    <div class="paywall-buttons">
+      <button class="btn-subscribe" onclick="goToSubscription()">Subscribe Now</button>
+      <button class="btn-close" onclick="closePaywall()">Not Now</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Initialize PDF.js
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  let pdfDoc = null;
+  let pageNum = 1;
+  const FREE_PAGES = 15; // Free preview limit
+  let totalPages = 0;
+  let isSubscribed = false;
+
+  // Get URL parameters
+  const params = new URLSearchParams(window.location.search);
+  const pdfUrl = params.get('pdf');
+  const title = decodeURIComponent(params.get('title') || 'Document');
+  const description = decodeURIComponent(params.get('desc') || '');
+
+  // Check subscription status
+  function checkSubscription() {
+    isSubscribed = localStorage.getItem('premium_subscriber') === 'true';
+  }
+
+  // Load PDF
+  async function loadPdf() {
+    if (!pdfUrl) {
+      alert('No PDF URL provided');
+      window.location.href = 'index.html';
+      return;
+    }
+
+    try {
+      // Set document title and description
+      document.getElementById('pdfTitle').textContent = title;
+      document.getElementById('pdfDescription').textContent = description;
+
+      // Hide free notice if subscribed
+      if (isSubscribed) {
+        document.getElementById('freeNotice').style.display = 'none';
+      }
+
+      // Load PDF
+      pdfDoc = await pdfjsLib.getDocument(pdfUrl).promise;
+      totalPages = pdfDoc.numPages;
+      document.getElementById('totalPages').textContent = totalPages;
+      
+      renderPage(1);
+    } catch (error) {
+      console.error('Error loading PDF:', error);
+      alert('Error loading PDF. Please check the URL and try again.');
+    }
+  }
+
+  // Render page
+  async function renderPage(num) {
+    checkSubscription();
+
+    // Check if user is trying to access premium pages
+    if (!isSubscribed && num > FREE_PAGES) {
+      showPaywall();
+      document.getElementById('pageNum').value = FREE_PAGES;
+      renderPage(FREE_PAGES);
+      return;
+    }
+
+    try {
+      const page = await pdfDoc.getPage(num);
+      const canvas = document.getElementById('pdfCanvas');
+      const context = canvas.getContext('2d');
+      const viewport = page.getViewport({ scale: 1.5 });
+
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      const renderContext = {
+        canvasContext: context,
+        viewport: viewport
+      };
+
+      await page.render(renderContext).promise;
+      pageNum = num;
+      document.getElementById('pageNum').value = pageNum;
+      updateControls();
+    } catch (error) {
+      console.error('Error rendering page:', error);
+    }
+  }
+
+  // Navigation functions
+  function previousPage() {
+    if (pageNum > 1) {
+      renderPage(pageNum - 1);
+    }
+  }
+
+  function nextPage() {
+    if (pageNum < totalPages) {
+      renderPage(pageNum + 1);
+    } else if (pageNum === totalPages && !isSubscribed) {
+      showPaywall();
+    }
+  }
+
+  function goToPage() {
+    let pg = parseInt(document.getElementById('pageNum').value);
+    if (pg > 0 && pg <= totalPages) {
+      renderPage(pg);
+    }
+  }
+
+  // Update control buttons
+  function updateControls() {
+    document.getElementById('prevPage').disabled = pageNum === 1;
+    document.getElementById('nextPage').disabled = pageNum === totalPages && !isSubscribed;
+  }
+
+  // Paywall functions
+  function showPaywall() {
+    document.getElementById('paywallOverlay').classList.add('active');
+  }
+
+  function closePaywall() {
+    document.getElementById('paywallOverlay').classList.remove('active');
+  }
+
+  function goToSubscription() {
+    window.location.href = 'subscription.html';
+  }
+
+  // Initialize
+  checkSubscription();
+  loadPdf();
+</script>
+
+</body>
+</html>
